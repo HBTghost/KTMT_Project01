@@ -285,5 +285,105 @@ std::string ConvertBefore(std::string before)
 }
 std::string ConvertAfter(std::string after)
 {
+	return "";
+}
 
+std::string cleanFloat(std::string num) {
+	int lzero = num.find_first_not_of('0');
+	int rzero = num.find_last_not_of('0');
+	int dot = num.find_first_not_of('.');
+
+	num.erase(rzero+1, num.size());
+	if (lzero < dot - 1) {
+		num = clean(num);
+	}
+
+	return num;
+}
+
+std::string MultiplyNumberString(std::string a, std::string b) {
+
+	std::string buf = "";
+
+	if (a[0] == '-' || b[0] == '-') {
+		if (a[0] != b[0]) {
+			buf = '-';
+		}
+		if (a[0] == '-') {
+			a.erase(a.begin());
+		}
+		if (b[0] == '-') {
+			b.erase(b.begin());
+		}
+	}
+
+	int own { 0 };
+	bool as = (a.find_first_of('.') != std::string::npos);
+	bool bs = (b.find_first_of('.') != std::string::npos);
+	
+	if (as) {
+		a = cleanFloat(a);
+		int dot = a.find_first_of(".");
+		own += (a.size()-dot-1);
+		a.erase(dot, 1);
+		a.erase(0, a.find_first_not_of('0'));
+	}
+	if (bs) {
+		b = cleanFloat(b);
+		int dot = b.find_first_of(".");
+		own += (b.size()-dot-1);
+		b.erase(dot, 1);
+		b.erase(0, b.find_first_not_of('0'));
+	}
+
+	std::string Result = "0";
+	std::string TempStr;
+	int Temp = 0;
+
+	for (int i = 0; i < b.size(); i++) {
+		for (int j = a.size() - 1; j > -1; j--) {
+			Temp = Temp + (a[j] - '0') * (b[b.size() - i - 1] - '0');
+			TempStr.push_back((Temp % 10) + '0');
+			Temp = Temp / 10;
+		}
+		if (Temp != 0) { //Nếu vẫn còn Temp.
+			TempStr.push_back(Temp + '0');
+			Temp = 0;
+		}
+
+		//Đảo chuỗi.
+		reverse(TempStr.begin(), TempStr.end());
+
+		//Thêm các số 0 cần thiết vào sau.
+		for (int j = 0; j < i; j++) {
+			TempStr.push_back('0');
+		}
+
+		//Cộng Result và Temp.
+		Result = AddNumberString(Result, TempStr);
+		TempStr.clear(); //Dọn chuỗi tạm để dùng cho các bước tiếp theo.
+	}
+
+	if (own >= Result.size()) {
+		Result = fill(Result, own);
+		Result.insert(0, "0.");
+	}
+	else {
+		Result.insert(Result.size()-own, ".");
+	}
+
+	// while (Result[Result.size()-1] == '0' && own > 0) {
+	// 	--own;
+	// 	Result.pop_back();
+	// }
+
+	// if (own > 0) {
+	// 	buf += "0.";
+	// 	while (--own > 0) {
+	// 		buf += "0";
+	// 	}
+	// 	return buf + Result;
+	// }
+
+	return buf + Result;
 }

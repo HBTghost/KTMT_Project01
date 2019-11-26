@@ -46,3 +46,7 @@ std::string CutAfter(std::string bin);
 std::string ConvertBefore(std::string before);
 
 std::string ConvertAfter(std::string after);
+
+std::string cleanFloat(std::string num);
+
+std::string MultiplyNumberString(std::string a, std::string b);
