@@ -79,12 +79,15 @@ std::string calBeforeComma(std::string bin_tmp)
 
 std::string FloatBinToDec(std::string bin)
 {
+	int res = 1;
 	string tmp;
 	int BitZero = FindBitZero(bin);
-	int IndexNum = FindIndexNum(bin);
+	int IndexNum = FindIndexNum(bin,res);
 	tmp = addFloatingPoint(bin, IndexNum);
 	tmp = addOneInStart(tmp, BitZero);
-	return tmp;
+	string result;
+	result=toDecString(bin, AfterComma(tmp), BeforeComma(tmp));
+	return result;
 }
 
 int calIndexNum(std::string bin_temp)
@@ -98,18 +101,18 @@ int calIndexNum(std::string bin_temp)
 	return tmp;
 }
 
-float calAfterComma(std::string bin_tmp)
+std::string calAfterComma(std::string bin_tmp)
 {
-	float tmp = 0;
+	string result;
 	for (int i = 0; i < bin_tmp.length(); i++)
 	{
 		if (bin_tmp[i] == '1')
-			tmp += pow(2, -i);
+			result = AddNumberString(result, pow_2_n(-i));
 	}
-	return tmp;
+	return result;
 }
 
-int FindIndexNum(std::string bin)
+int FindIndexNum(std::string bin, int& res)
 {
 	std::string tmp;
 	int sign = 0;
@@ -119,7 +122,13 @@ int FindIndexNum(std::string bin)
 		tmp.push_back(bin[i]);
 	}
 	sign = calIndexNum(tmp);
-	return sign - pow(2, 14) + 1;
+	int result = sign - pow(2, 14) + 1;
+	if (result > 112)
+	{
+		res = result - 112;
+		return 112;
+	}
+	else return result;
 }
 
 std::string addFloatingPoint(std::string bin, int IndexNum)
@@ -193,7 +202,7 @@ std::string BeforeComma(std::string bin_tmp)
 }
 
 
-float AfterComma(std::string bin_tmp)
+std::string AfterComma(std::string bin_tmp)
 {
 	int pivot = 0;
 	string tmp;
@@ -212,7 +221,7 @@ float AfterComma(std::string bin_tmp)
 	return calAfterComma(tmp);
 }
 
-std::string toDecString(std::string bin, float afterComma, std::string BeforeComma)
+std::string toDecString(std::string bin, std::string afterComma, std::string BeforeComma)
 {
 	string tmp, result;
 	if (bin[0] == '1')
@@ -221,7 +230,6 @@ std::string toDecString(std::string bin, float afterComma, std::string BeforeCom
 	{
 		result.push_back(BeforeComma[i]);
 	}
-	tmp = to_string(afterComma);
 	for (int i = 1; i < tmp.length(); i++)
 	{
 		result.push_back(tmp[i]);
@@ -230,3 +238,52 @@ std::string toDecString(std::string bin, float afterComma, std::string BeforeCom
 }
 
 
+
+
+
+////////////////////////////////////////////////////////
+std::string FloatDecToBin(std::string bin)
+{
+	string BeforeComma, AfterComma, tmp;
+	BeforeComma = CutBefore(bin);
+	AfterComma = CutAfter(bin);
+	return BeforeComma;
+}
+
+
+
+std::string CutBefore(std::string bin)
+{
+	string tmp;
+	for (int i = 0; i < bin.length(); i++)
+	{
+		if (bin[i] != '.')
+		{
+			tmp.push_back(bin[i]);
+		}
+		else break;
+	}
+	return tmp;
+}
+
+std::string CutAfter(std::string bin)
+{
+	string tmp;
+	for (int i = 0; i < bin.length(); i++)
+	{
+		if (bin[i] == '.')
+		{
+			tmp.push_back(bin[i]);
+		}
+	}
+	return tmp;
+}
+
+std::string ConvertBefore(std::string before)
+{
+	return BinToDec(before);
+}
+std::string ConvertAfter(std::string after)
+{
+
+}
