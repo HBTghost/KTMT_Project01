@@ -165,6 +165,34 @@ std::string QInt::toBinString() {
 
 // ============ //
 
+void scan(QInt& x)
+{
+	int type;
+	std::cout << std::endl << "Enter type of input data (2 for bin string, 10 for decimal): ";
+	std::cin >> type;
+
+	while ((type != 2) && (type != 10)) {
+		std::cout << "Invalid type. Please enter again: ";
+		std::cin >> type;
+	}
+
+	std::string temp;
+	std::cout << "Input: ";
+	std::cin >> temp;
+
+	if (type == 10) {
+		DecToBin(temp);
+	}
+
+	QInt res(temp);
+
+	x = res;
+}
+
+void print(QInt x) {
+	std::cout << x.toBinString();
+}
+
 void fillBinWithZero(std::string& bin, int bitNum) {
 	for (int i = bin.length() + 1; i <= bitNum; i++) {
 		bin.insert(0, "0");
