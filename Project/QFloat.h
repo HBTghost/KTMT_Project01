@@ -37,7 +37,9 @@ std::string AfterComma(std::string bin_tmp);
 
 std::string toDecString(std::string bin, std::string afterComma, std::string BeforeComma);
 
+bool SpecialCase(std::string bin, int IndexNum, int res);
 
+bool Zero(std::string bin);
 ////////////////////////////////////////////////////
 std::string CutBefore(std::string bin);
 

@@ -81,13 +81,20 @@ std::string FloatBinToDec(std::string bin)
 {
 	int res = 1;
 	string tmp;
+	string result;
 	int BitZero = FindBitZero(bin);
 	int IndexNum = FindIndexNum(bin,res);
-	tmp = addFloatingPoint(bin, IndexNum);
-	tmp = addOneInStart(tmp, BitZero);
-	string result;
-	result=toDecString(bin, AfterComma(tmp), BeforeComma(tmp));
-	return result;
+	if (SpecialCase(bin, IndexNum, res+IndexNum))
+	{
+		return "\nEnd";
+	}
+	else
+	{
+		tmp = addFloatingPoint(bin, IndexNum);
+		tmp = addOneInStart(tmp, BitZero);
+		result = toDecString(bin, AfterComma(tmp), BeforeComma(tmp));
+	}
+		return result;
 }
 
 int calIndexNum(std::string bin_temp)
@@ -236,8 +243,42 @@ std::string toDecString(std::string bin, std::string afterComma, std::string Bef
 	}
 	return result;
 }
-
-
+bool SpecialCase(std::string bin , int IndexNum, int res)
+{
+	if (Zero(bin) && IndexNum == 0)
+	{
+		cout << "Zero";
+		return true;
+	}
+	else if (!Zero(bin) && IndexNum == 0)
+	{
+		cout << "Denormalized";
+		return true;
+	}
+	else if (Zero(bin) && res == 16384)
+	{
+		cout << "Infinity";
+		return true;
+	}
+	else if (!Zero(bin) && res == 16384)
+	{
+		cout << "NaN";
+		return true;
+	}
+	return false;
+}
+bool Zero(std::string bin_tmp)
+{
+	int key=0;
+	for (int i= 16; i < bin_tmp.length(); i++)
+	{
+		if (key == 0 && i == 127)
+			return true;
+		if (bin_tmp[i] == '1')
+			key++;
+	}
+	return false;
+}
 
 
 
@@ -282,10 +323,6 @@ std::string CutAfter(std::string bin)
 std::string ConvertBefore(std::string before)
 {
 	return BinToDec(before);
-}
-std::string ConvertAfter(std::string after)
-{
-	return "";
 }
 
 std::string cleanFloat(std::string num) {
@@ -387,3 +424,4 @@ std::string MultiplyNumberString(std::string a, std::string b) {
 
 	return buf + Result;
 }
+//std::string ConvertAfter(std::string after)
