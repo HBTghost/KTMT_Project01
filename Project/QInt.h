@@ -50,6 +50,10 @@ private:
 	int arr[4] = { 0 };
 };
 
+void scan(QInt& x);
+
+void print(QInt x);
+
 void fillBinWithZero(std::string& bin, int bitNum);
 
 std::string fill(std::string obj, int size);
