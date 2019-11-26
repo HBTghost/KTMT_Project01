@@ -636,43 +636,56 @@ std::string HexToDec(std::string hex) {
 }
 
 std::string pow_2_n(int n) {
-	FILE* fout;
-	fopen_s(&fout, "buf.txt", "w");
-	int i, j, blen = n / 32 + 1, dlen = n / 29 + 1;
-	uint32_t* bin = new uint32_t[blen];
-	uint32_t* dec = new uint32_t[dlen];
-	uint64_t num;
+	if (n >= 0) {
+		FILE* fout;
+		fopen_s(&fout, "buf.txt", "w");
+		int i, j, blen = n / 32 + 1, dlen = n / 29 + 1;
+		uint32_t* bin = new uint32_t[blen];
+		uint32_t* dec = new uint32_t[dlen];
+		uint64_t num;
 
-	for (i = 0; i < blen; i++) {
-		bin[i] = 0;
-	}
-	bin[n / 32] = (uint32_t)1 << (n % 32);
-
-	for (j = 0; blen > 0; ) {
-		for (num = 0, i = blen; i-- > 0;) {
-			num = (num << 32) | bin[i];
-			bin[i] = num / 1000000000;
-			num = num % 1000000000;
+		for (i = 0; i < blen; i++) {
+			bin[i] = 0;
 		}
-		dec[j++] = (uint32_t)num;
-		while (blen > 0 && bin[blen - 1] == 0) {
-			blen--;
+		bin[n / 32] = (uint32_t)1 << (n % 32);
+
+		for (j = 0; blen > 0; ) {
+			for (num = 0, i = blen; i-- > 0;) {
+				num = (num << 32) | bin[i];
+				bin[i] = num / 1000000000;
+				num = num % 1000000000;
+			}
+			dec[j++] = (uint32_t)num;
+			while (blen > 0 && bin[blen - 1] == 0) {
+				blen--;
+			}
 		}
+
+		fprintf(fout, "%u", dec[--j]);
+		while (j-- > 0)
+			fprintf(fout, "%09u", dec[j]);
+
+		fclose(fout);
+		delete[] bin;
+		delete[] dec;
+
+		std::ifstream fin;
+		fin.open("buf.txt");
+		std::string ss;
+		getline(fin, ss);
+		fin.close();
+
+		return ss;
 	}
+	int absN = -n;
+	std::string res { "5" };
 
-	fprintf(fout, "%u", dec[--j]);
-	while (j-- > 0)
-		fprintf(fout, "%09u", dec[j]);
+	for (std::size_t i = 1; i < absN; ++i) {
+		res += "0";
+		res = DivBy2(res);
+	}
+	res = fill(res, absN);
+	res.insert(0, "0.");
 
-	fclose(fout);
-	delete[] bin;
-	delete[] dec;
-
-	std::ifstream fin;
-	fin.open("buf.txt");
-	std::string ss;
-	getline(fin, ss);
-	fin.close();
-
-	return ss;
+	return res;
 }

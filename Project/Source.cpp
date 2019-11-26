@@ -27,12 +27,16 @@ int main(int argc, char const* argv[])
 
 	// Qfloat fa(testFloat);
 
-	std::cout << pow_2_n(99999) << "\n";
+	// std::cout << pow_2_n(99999) << "\n";
 
 
 
 	// std::string testDec("-1234.125");
 	// Qfloat fb(testDec);
+
+	for (int i = -32; i < 33; ++i) {
+		std::cout << "2^" << i << " = " << pow_2_n(i) << "\n";
+	}
 
 
 	return 0;
