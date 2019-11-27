@@ -87,13 +87,15 @@ std::string FloatBinToDec(std::string bin)
 	string res_ = pow_2_n(res);
 	if (SpecialCase(bin, IndexNum, res + IndexNum))
 	{
-		return "\nEnd";
+		return "";
 	}
 	else
 	{
 		tmp = addFloatingPoint(bin, IndexNum);
 		tmp = addOneInStart(tmp, BitZero);
 		result = MultiplyNumberString((toDecString(bin, AfterComma(tmp), BeforeComma(tmp))), res_);
+		if (result[(result.length()-1)] == '.')
+			result.push_back('0');
 	}
 	return result;
 }
@@ -123,33 +125,33 @@ std::string calAfterComma(std::string bin_tmp)
 int FindIndexNum(std::string bin, int& res)
 {
 	int k = 0;
-		for (int i = 1; i <= 15; i++)
+	for (int i = 1; i <= 15; i++)
+	{
+		if (bin[i] == '0')
+			k++;
+	}
+	if (k == 15)
+	{
+		return 1;
+	}
+	else
+	{
+		std::string tmp;
+		int sign = 0;
+		int count = 0;
+		for (int i = 1; i < 16; i++)
 		{
-			if (bin[i] == '0')
-				k++;
+			tmp.push_back(bin[i]);
 		}
-		if (k == 15)
+		sign = calIndexNum(tmp);
+		int result = sign - pow(2, 14) + 1;
+		if (result > 112)
 		{
-			return 1;
+			res = result - 112;
+			return 112;
 		}
-		else
-		{
-			std::string tmp;
-			int sign = 0;
-			int count = 0;
-			for (int i = 1; i < 16; i++)
-			{
-				tmp.push_back(bin[i]);
-			}
-			sign = calIndexNum(tmp);
-			int result = sign - pow(2, 14) + 1;
-			if (result > 112)
-			{
-				res = result - 112;
-				return 112;
-			}
-			else return result;
-		}
+		else return result;
+	}
 }
 
 int CharToIntNum(char n)
@@ -362,6 +364,11 @@ std::string toDecString(std::string bin, std::string afterComma, std::string Bef
 	for (int i = 0; i < BeforeComma.length(); i++)
 	{
 		result.push_back(BeforeComma[i]);
+	}
+	if (afterComma[0] == '0')
+	{	
+		result.push_back('.');
+		result.push_back('0');
 	}
 	for (int i = 1; i < afterComma.length(); i++)
 	{
