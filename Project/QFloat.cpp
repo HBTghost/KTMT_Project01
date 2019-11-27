@@ -122,21 +122,34 @@ std::string calAfterComma(std::string bin_tmp)
 
 int FindIndexNum(std::string bin, int& res)
 {
-	std::string tmp;
-	int sign = 0;
-	int count = 0;
-	for (int i = 1; i < 16; i++)
-	{
-		tmp.push_back(bin[i]);
-	}
-	sign = calIndexNum(tmp);
-	int result = sign - pow(2, 14) + 1;
-	if (result > 112)
-	{
-		res = result - 112;
-		return 112;
-	}
-	else return result;
+	int k = 0;
+		for (int i = 1; i <= 15; i++)
+		{
+			if (bin[i] == '0')
+				k++;
+		}
+		if (k == 15)
+		{
+			return 1;
+		}
+		else
+		{
+			std::string tmp;
+			int sign = 0;
+			int count = 0;
+			for (int i = 1; i < 16; i++)
+			{
+				tmp.push_back(bin[i]);
+			}
+			sign = calIndexNum(tmp);
+			int result = sign - pow(2, 14) + 1;
+			if (result > 112)
+			{
+				res = result - 112;
+				return 112;
+			}
+			else return result;
+		}
 }
 
 int CharToIntNum(char n)
@@ -716,4 +729,36 @@ std::string toBinString(std::string sign, std::string index, std::string signifi
 		}
 	}
 	return result;
+}
+
+std::string toDec(std::string bin) {
+	while (bin.size() < 128) {
+		bin += "0";
+	}
+	std::string sign = bin[0] > '0' ? "-" : "";
+	std::string ex = bin.substr(1, 15);
+	std::string val = bin.substr(16);
+
+	if (ex.find_first_of('0') == std::string::npos) {
+		if (val.find_first_of('1') == std::string::npos) {
+			return "infinity";
+		}
+		else {
+			return "NaN";
+		}
+	}
+
+	int expo = std::stoi(BinToDec(bin.substr(1, 15))) - std::stoi(pow_2_n(14)) + 1;
+	expo -= val.size();
+	if (ex.find_first_of('1') == std::string::npos) {
+		if (val.find_first_of('1') == std::string::npos) {
+			return "0";
+		}
+		val.insert(0, "0");
+		expo++;
+	}
+	else {
+		val.insert(0, "1");
+	}
+	return sign + MultiplyNumberString(BinToDec(val), pow_2_n(expo));
 }

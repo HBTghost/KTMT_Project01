@@ -644,7 +644,9 @@ std::string GetBinFromHex(std::string hex) {
 
 std::string HexToBin(std::string hex) {
 	std::string res;
-	// hex = fill(hex, 32);
+	std::for_each(hex.begin(), hex.end(), [](char & c) {
+		c = ::toupper(c);
+	});
 	for (std::size_t i = 0; i < hex.size(); ++i) {
 		res += GetBinFromHex(hex.substr(i, 1));
 	}
