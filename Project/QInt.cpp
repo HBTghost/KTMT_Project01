@@ -541,37 +541,42 @@ bool small(std::string a, std::string b) {
 	return !a1;
 }
 
-std::string divi(std::string a, std::string b) {
+	std::string divi(std::string a, std::string b) {
 	a = fill(a, 128);
 	b = fill(b, 128);
 
 	std::string zero = fill("", 128);
 	bool both = a[0] == b[0];
 	if (a[0] > '0') {
-		int lenA = a.size() - a.find_first_of('1'); // 4
-		int lenB = b.size() - b.find_first_of('1'); // 2
-		a = a.erase(0, a.find_first_of('1')); // 1111
-		b = b.erase(0, b.find_first_of('1')); // 1111
-		// std::string b1 = b.erase(0, b.find_first_of('1'));
-		int delta = lenA - lenB; // 2
-
-		std::string temp1 = a.substr(0, lenB); // 11
-		std::string res = (!small(temp1, b) ? "1" : "0"); // 1
-		std::string temp2, tmp;
-		for (int i = 0; i < delta; ++i) {
-			temp2 = (res[res.size() - 1] > '0') ? b : zero; // 11 00
-			tmp = a.substr(lenB + i, 1);
-			temp1 = minu(temp1, temp2) + tmp; // 01 011
-			temp1.erase(0, 1);
-			res.push_back(!small(temp1, b) ? '1' : '0'); // 10
-		}
-
-		res = fill(res, 128);
-		if (!both) {
-			res = com2(res);
-		}
-		return res;
+		a.erase(a.begin());
 	}
+	if (b[0] > '0') {
+		b.erase(b.begin());
+	}
+	
+	int lenA = a.size() - a.find_first_of('1'); // 4
+	int lenB = b.size() - b.find_first_of('1'); // 2
+	a = a.erase(0, a.find_first_of('1')); // 1111
+	b = b.erase(0, b.find_first_of('1')); // 1111
+	// std::string b1 = b.erase(0, b.find_first_of('1'));
+	int delta = lenA - lenB; // 2
+
+	std::string temp1 = a.substr(0, lenB); // 11
+	std::string res = (!small(temp1, b) ? "1" : "0"); // 1
+	std::string temp2, tmp;
+	for (int i = 0; i < delta; ++i) {
+		temp2 = (res[res.size() - 1] > '0') ? b : zero; // 11 00
+		tmp = a.substr(lenB + i, 1);
+		temp1 = minu(temp1, temp2) + tmp; // 01 011
+		temp1.erase(0, 1);
+		res.push_back(!small(temp1, b) ? '1' : '0'); // 10
+	}
+
+	res = fill(res, 128);
+	if (!both) {
+		res = com2(res);
+	}
+	return res;
 }
 
 std::string shiftLeft(std::string obj, int num) {

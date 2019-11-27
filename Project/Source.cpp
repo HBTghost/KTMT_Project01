@@ -4,12 +4,12 @@
 int main(int argc, char const* argv[])
 {
 
-	std::vector<std::string> test;
+	// std::vector<std::string> test;
 
-	test[2] = "2222";
+	// test[2] = "2222";
 
 	// std::string testFloat{ "11000101000100101001001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000" };
-	string d = "165465.4552";
+	// string d = "165465.4552";
 	
 
 	// cout << FloatBinToDec(d);
@@ -31,6 +31,6 @@ int main(int argc, char const* argv[])
 
 	// std::cout << divi("11111111111111111111111111111111111111111111111111011010110010100100100110000011001000011111010111100101101010000001001101111011", "11000101101000010100110100100011010011001001");
 
-	std::cout << divi("100", "10");
+	std::cout << BinToDec(divi(DecToBin("742470310"), DecToBin("15710")));
 	return 0;
 }
