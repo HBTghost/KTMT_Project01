@@ -92,8 +92,10 @@ int digit(int by);
 
 string divide(string number, int divisor);
 
+// decimal string to binary string
 std::string DecToBin(std::string dec);
 
+//binary string to decimal string
 std::string BinToDec(std::string bin);
 
 std::string clean(std::string obj);
