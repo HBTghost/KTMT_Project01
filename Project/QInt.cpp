@@ -583,6 +583,7 @@ std::string divi(std::string a, std::string b) {
 	return res;
 }
 
+
 std::string shiftLeft(std::string obj, int num) {
 	obj = fill(obj, 128);
 
