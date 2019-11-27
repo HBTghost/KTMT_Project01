@@ -16,6 +16,8 @@ public:
 
 	~IOFile();
 
+	//lưu kết quả vào file output
+	bool writeResults(std::string fname);
 
 private:
 
@@ -29,9 +31,6 @@ private:
 	//đọc các dòng trong file input
 	bool readCommandLine(std::string fname);
 
-	//lưu kết quả vào file output
-	bool writeResults(std::string fname);
-
 	//thực thi tất cả các dòng lệnh của file input
 	void executeAllCommandLine();
 
@@ -42,7 +41,7 @@ private:
 	void executeCommandLineModeQInt(int i);
 
 	//thực thi dòng lệnh thứ i của file input trong chế độ QFloat
-	//void executeCommandLineModeQFloat(int i);
+	void executeCommandLineModeQFloat(int i);
 
 	//Tách dòng lệnh thành từng chuỗi
 	std::vector<std::string> tokenizeCommandLine(int i);
