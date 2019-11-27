@@ -87,13 +87,15 @@ std::string FloatBinToDec(std::string bin)
 	string res_ = pow_2_n(res);
 	if (SpecialCase(bin, IndexNum, res + IndexNum))
 	{
-		return "\nEnd";
+		return "";
 	}
 	else
 	{
 		tmp = addFloatingPoint(bin, IndexNum);
 		tmp = addOneInStart(tmp, BitZero);
 		result = MultiplyNumberString((toDecString(bin, AfterComma(tmp), BeforeComma(tmp))), res_);
+		if (result[(result.length()-1)] == '.')
+			result.push_back('0');
 	}
 	return result;
 }
@@ -362,6 +364,11 @@ std::string toDecString(std::string bin, std::string afterComma, std::string Bef
 	for (int i = 0; i < BeforeComma.length(); i++)
 	{
 		result.push_back(BeforeComma[i]);
+	}
+	if (afterComma[0] == '0')
+	{	
+		result.push_back('.');
+		result.push_back('0');
 	}
 	for (int i = 1; i < afterComma.length(); i++)
 	{
