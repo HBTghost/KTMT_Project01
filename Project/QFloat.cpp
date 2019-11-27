@@ -122,21 +122,34 @@ std::string calAfterComma(std::string bin_tmp)
 
 int FindIndexNum(std::string bin, int& res)
 {
-	std::string tmp;
-	int sign = 0;
-	int count = 0;
-	for (int i = 1; i < 16; i++)
+	int k = 0;
+	for (int i = 1; i <= 15; i++)
 	{
-		tmp.push_back(bin[i]);
+		if (bin[i] == '0')
+			k++;
 	}
-	sign = calIndexNum(tmp);
-	int result = sign - pow(2, 14) + 1;
-	if (result > 112)
+	if (k == 15)
 	{
-		res = result - 112;
-		return 112;
+		return 1;
 	}
-	else return result;
+	else
+	{
+		std::string tmp;
+		int sign = 0;
+		int count = 0;
+		for (int i = 1; i < 16; i++)
+		{
+			tmp.push_back(bin[i]);
+		}
+		sign = calIndexNum(tmp);
+		int result = sign - pow(2, 14) + 1;
+		if (result > 112)
+		{
+			res = result - 112;
+			return 112;
+		}
+		else return result;
+	}
 }
 
 int CharToIntNum(char n)
