@@ -44,373 +44,37 @@ std::string Qfloat::toBinString()
 	return result;
 }
 
-int FindBitZero(std::string bin)
-{
-	for (int i = 15; i < 128; i++)
-	{
-		if (bin[i] == '0')
-		{
-			if (i = 127) return 127;
-			for (int j = i + 1; j < 128; j++)
-			{
-				if (bin[j] == '1')
-					break;
-				else if (j == 127)
-					return i - 1;
-			}
-		}
-	}
-}
-
-
-
-std::string calBeforeComma(std::string bin_tmp)
-{
-	string result;
-	for (int i = 0; i < bin_tmp.length(); i++)
-	{
-		if (bin_tmp[i] == '1')
-		{
-			result = AddNumberString(result, pow_2_n(bin_tmp.length() - i - 1));
-		}
-	}
-	return result;
-}
-
 std::string FloatBinToDec(std::string bin)
 {
-	int res = 0;
-	string tmp;
-	string result;
-	int BitZero = FindBitZero(bin);
-	int IndexNum = FindIndexNum(bin, res);
-	string res_ = pow_2_n(res);
-	if (SpecialCase(bin, IndexNum, res + IndexNum))
-	{
-		return "";
+	while (bin.size() < 128) {
+		bin += "0";
 	}
-	else
-	{
-		tmp = addFloatingPoint(bin, IndexNum);
-		tmp = addOneInStart(tmp, BitZero);
-		result = MultiplyNumberString((toDecString(bin, AfterComma(tmp), BeforeComma(tmp))), res_);
-		if (result[(result.length()-1)] == '.')
-			result.push_back('0');
-	}
-	return result;
-}
+	std::string sign = bin[0] > '0' ? "-" : "";
+	std::string ex = bin.substr(1, 15);
+	std::string val = bin.substr(16);
 
-int calIndexNum(std::string bin_temp)
-{
-	int tmp = 0;
-	for (int i = 0; i < 15; i++)
-	{
-		if (bin_temp[i] == '1')
-			tmp += pow(2, 14 - i);
+	if (ex.find_first_of('0') == std::string::npos) {
+		if (val.find_first_of('1') == std::string::npos) {
+			return "infinity";
+		}
+		else {
+			return "NaN";
+		}
 	}
-	return tmp;
-}
 
-std::string calAfterComma(std::string bin_tmp)
-{
-	string result = { '0' };
-	for (int i = 0; i < bin_tmp.length(); i++)
-	{
-		if (bin_tmp[i] == '1')
-			result = AddNumberFloatString(result, pow_2_n(-i - 1));
-	}
-	return result;
-}
-
-int FindIndexNum(std::string bin, int& res)
-{
-	int k = 0;
-	for (int i = 1; i <= 15; i++)
-	{
-		if (bin[i] == '0')
-			k++;
-	}
-	if (k == 15)
-	{
-		return 1;
-	}
-	else
-	{
-		std::string tmp;
-		int sign = 0;
-		int count = 0;
-		for (int i = 1; i < 16; i++)
-		{
-			tmp.push_back(bin[i]);
+	int expo = std::stoi(BinToDec(bin.substr(1, 15))) - std::stoi(pow_2_n(14)) + 1;
+	expo -= val.size();
+	if (ex.find_first_of('1') == std::string::npos) {
+		if (val.find_first_of('1') == std::string::npos) {
+			return "0";
 		}
-		sign = calIndexNum(tmp);
-		int result = sign - pow(2, 14) + 1;
-		if (result > 112)
-		{
-			res = result - 112;
-			return 112;
-		}
-		else return result;
+		val.insert(0, "0");
+		expo++;
 	}
-}
-
-int CharToIntNum(char n)
-{
-	int tmp = int(n);
-	switch (tmp)
-	{
-	case 48:
-		return 0;
-	case 49:
-		return 1;
-	case 50:
-		return 2;
-	case 51:
-		return 3;
-	case 52:
-		return 4;
-	case 53:
-		return 5;
-	case 54:
-		return 6;
-	case 55:
-		return 7;
-	case 56:
-		return 8;
-	case 57:
-		return 9;
+	else {
+		val.insert(0, "1");
 	}
-}
-char IntToCharNum(int n)
-{
-	switch (n)
-	{
-	case 0:
-		return 48;
-	case 1:
-		return 49;
-	case 2:
-		return 50;
-	case 3:
-		return 51;
-	case 4:
-		return 52;
-	case 5:
-		return 53;
-	case 6:
-		return 54;
-	case 7:
-		return 55;
-	case 8:
-		return 56;
-	case 9:
-		return 57;
-	}
-}
-
-std::string AddNumberFloatString(std::string a, std::string b)
-{
-	string tmp1;
-	int res = 0;
-	if (a.length() >= b.length())
-	{
-		for (int i = 0; i < a.length(); i++)
-		{
-			tmp1.push_back('0');
-		}
-		for (int i = a.length() - 1; i > b.length() - 1; i--)
-		{
-			tmp1[i] = a[i];
-		}
-		tmp1[1] = '.';
-		for (int i = b.length() - 1; i > 1; i--)
-		{
-			int tmp = CharToIntNum(a[i]) + CharToIntNum(b[i]);
-			if (tmp + res >= 10)
-			{
-				tmp1[i] = (IntToCharNum((tmp + res) % 10));
-				res = tmp / 10;
-			}
-			else
-			{
-				tmp1[i] = IntToCharNum(tmp + res);
-				res = 0;
-			}
-		}
-	}
-	else
-	{
-		for (int i = 0; i < b.length(); i++)
-		{
-			tmp1.push_back('0');
-		}
-		for (int i = b.length() - 1; i > a.length() - 1; i--)
-		{
-			tmp1[i] = b[i];
-		}
-		tmp1[1] = '.';
-		for (int i = a.length() - 1; i > 1; i--)
-		{
-			int tmp = CharToIntNum(a[i]) + CharToIntNum(b[i]);
-			if (tmp + res >= 10)
-			{
-				tmp1[i] = (IntToCharNum((tmp + res) % 10));
-				res = tmp / 10;
-			}
-			else
-			{
-				tmp1[i] = IntToCharNum(tmp + res);
-				res = 0;
-			}
-		}
-	}
-	return tmp1;
-}
-std::string addFloatingPoint(std::string bin, int IndexNum)
-{
-	string tmp;
-	for (int j = 16; j < 128; j++)
-	{
-		tmp.push_back(bin[j]);
-	}
-	tmp.push_back('0');
-	if (IndexNum > 0)
-	{
-		for (int k = 112; k > IndexNum; k--)
-		{
-			tmp[k] = tmp[k - 1];
-		}
-		tmp[IndexNum] = '.';
-	}
-	else
-	{
-		for (int k = 112; k > 112 - abs(IndexNum); k--)
-		{
-			tmp[k] = tmp[k - 1];
-		}
-		tmp[111 - abs(IndexNum)] = '.';
-	}
-	return tmp;
-}
-
-std::string addOneInStart(std::string bin_tmp, int BitZero)
-{
-	string tmp;
-	for (int k = 0; k <= BitZero - 15; k++)
-	{
-		tmp.push_back(bin_tmp[k]);
-	}
-	tmp.push_back('0');
-	for (int j = tmp.length(); j > 0; j--)
-	{
-		tmp[j] = tmp[j - 1];
-	}
-	tmp[0] = '1';
-	return tmp;
-}
-
-std::string BeforeComma(std::string bin_tmp)
-{
-	string tmp;
-	for (int i = 0; i < bin_tmp.length(); i++)
-	{
-		if (bin_tmp[i] != '.')
-		{
-			tmp.push_back(bin_tmp[i]);
-		}
-		else break;
-	}
-	if (tmp.length() < 15)
-	{
-		for (int i = 0; i = 15 - tmp.length(); i++)
-		{
-			tmp.push_back('0');
-			for (int j = tmp.length(); j > 0; j--)
-			{
-				tmp[j] = tmp[j - 1];
-			}
-			tmp[0] = '0';
-		}
-	}
-	string result = calBeforeComma(tmp);
-	return result;
-}
-
-
-std::string AfterComma(std::string bin_tmp)
-{
-	int pivot = 0;
-	string tmp;
-	for (int i = bin_tmp.length(); i >= 0; i--)
-	{
-		if (bin_tmp[i] == '.')
-		{
-			pivot = i + 1;
-			break;
-		}
-	}
-	for (int i = pivot; i < bin_tmp.length(); i++)
-	{
-		tmp.push_back(bin_tmp[i]);
-	}
-	return calAfterComma(tmp);
-}
-
-std::string toDecString(std::string bin, std::string afterComma, std::string BeforeComma)
-{
-	string tmp, result;
-	if (bin[0] == '1')
-		result.push_back('-');
-	for (int i = 0; i < BeforeComma.length(); i++)
-	{
-		result.push_back(BeforeComma[i]);
-	}
-	if (afterComma[0] == '0')
-	{	
-		result.push_back('.');
-		result.push_back('0');
-	}
-	for (int i = 1; i < afterComma.length(); i++)
-	{
-		result.push_back(afterComma[i]);
-	}
-	return result;
-}
-bool SpecialCase(std::string bin, int IndexNum, int res)
-{
-	if (Zero(bin) && IndexNum == 0)
-	{
-		cout << "Zero";
-		return true;
-	}
-	else if (!Zero(bin) && IndexNum == 0)
-	{
-		cout << "Denormalized";
-		return true;
-	}
-	else if (Zero(bin) && res == 16384)
-	{
-		cout << "Infinity";
-		return true;
-	}
-	else if (!Zero(bin) && res == 16384)
-	{
-		cout << "NaN";
-		return true;
-	}
-	return false;
-}
-bool Zero(std::string bin_tmp)
-{
-	int key = 0;
-	for (int i = 16; i < bin_tmp.length(); i++)
-	{
-		if (key == 0 && i == 127)
-			return true;
-		if (bin_tmp[i] == '1')
-			key++;
-	}
-	return false;
+	return sign + MultiplyNumberString(BinToDec(val), pow_2_n(expo));
 }
 
 
@@ -447,6 +111,19 @@ bool SpecialCaseDecToBin(std::string bin)
 
 std::string CutBefore(std::string bin)
 {
+	if (bin[0] == '-')
+	{
+		string tmp;
+		for (int i = 1; i < bin.length(); i++)
+		{
+			if (bin[i] != '.')
+			{
+				tmp.push_back(bin[i]);
+			}
+			else break;
+		}
+		return tmp;
+	}
 	string tmp;
 	for (int i = 0; i < bin.length(); i++)
 	{
@@ -457,6 +134,7 @@ std::string CutBefore(std::string bin)
 		else break;
 	}
 	return tmp;
+	
 }
 
 std::string CutAfter(std::string bin)
@@ -481,7 +159,11 @@ std::string CutAfter(std::string bin)
 std::string ConvertBefore(std::string before)
 {
 	string tmp, result;
-	tmp = DecToBin(before);;
+	while (before != "") 
+	{
+		tmp.insert(tmp.begin(), ((before[before.size() - 1] - '0') % 2) + '0');
+		before = DivBy2(before);
+	}
 	for (int i = 0; i < tmp.length(); i++)
 	{
 		if (tmp[i] == '1')
@@ -728,9 +410,9 @@ std::string toBinString(std::string sign, std::string index, std::string signifi
 	{
 		result.push_back(significand[i]);
 	}
-	if (result.length() < 132)
+	if (result.length() < 128)
 	{
-		for (int i = result.length(); i < 132; i++)
+		for (int i = result.length(); i < 128; i++)
 		{
 			result.push_back('0');
 		}
@@ -738,34 +420,3 @@ std::string toBinString(std::string sign, std::string index, std::string signifi
 	return result;
 }
 
-std::string toDec(std::string bin) {
-	while (bin.size() < 128) {
-		bin += "0";
-	}
-	std::string sign = bin[0] > '0' ? "-" : "";
-	std::string ex = bin.substr(1, 15);
-	std::string val = bin.substr(16);
-
-	if (ex.find_first_of('0') == std::string::npos) {
-		if (val.find_first_of('1') == std::string::npos) {
-			return "infinity";
-		}
-		else {
-			return "NaN";
-		}
-	}
-
-	int expo = std::stoi(BinToDec(bin.substr(1, 15))) - std::stoi(pow_2_n(14)) + 1;
-	expo -= val.size();
-	if (ex.find_first_of('1') == std::string::npos) {
-		if (val.find_first_of('1') == std::string::npos) {
-			return "0";
-		}
-		val.insert(0, "0");
-		expo++;
-	}
-	else {
-		val.insert(0, "1");
-	}
-	return sign + MultiplyNumberString(BinToDec(val), pow_2_n(expo));
-}
