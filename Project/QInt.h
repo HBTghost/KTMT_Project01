@@ -59,10 +59,10 @@ private:
 };
 
 // Decimal Integer to QInt
-void scan(QInt& x);
+void ScanQInt(QInt& x);
 
 // Print Decimal Integer from QInt
-void print(QInt x);
+void PrintQInt(QInt x);
 
 // Add 0 at head until bin.size() == bitNum
 void fillBinWithZero(std::string& bin, int bitNum);

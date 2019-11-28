@@ -4,21 +4,80 @@
 
 using namespace std;
 
+Qfloat::Qfloat(string bin) {
+	fillBinWithZero(bin, _DEFAULT_SIZE * 8);
+
+	int count = 0;
+	for (int i = 0; i < _DEFAULT_SIZE / 4; i++) {
+		for (int j = 0; j < 32; j++) {
+			if (bin[count++] == '1') {
+				this->arr[i] = this->arr[i] | (1 << (31 - j));
+			}
+		}
+	}
+}
+
+std::string Qfloat::toBinString() {
+	string result;
+
+	for (int i = 0; i < _DEFAULT_SIZE / 4; i++) {
+		for (int j = 0; j < 32; j++) {
+			if ((this->arr[i] & (1 << (31 - j))) == (1 << (31 - j))) {
+				result.push_back('1');
+			}
+			else {
+				result.push_back('0');
+			}
+		}
+	}
+	return result;
+}
+
+// ============= //
+
+void ScanQfloat(Qfloat& x) {
+	int type;
+	std::cout << std::endl << "Enter type of input data (2 for bin string, 10 for decimal): ";
+	std::cin >> type;
+
+	while ((type != 2) && (type != 10)) {
+		std::cout << "Invalid type. Please enter again: ";
+		std::cin >> type;
+	}
+
+	std::string temp;
+	std::cout << "Input: ";
+	std::cin >> temp;
+
+	if (type == 10) {
+		temp = FloatDecToBin(temp);
+	}
+
+	Qfloat res(temp);
+	x = res;
+}
+
+void PrintQfloat(Qfloat x) {
+	std::cout << x.toBinString();
+}
+
 std::string cleanFloat(std::string num) {
 	int lzero = num.find_first_not_of('0');
 	int rzero = num.find_last_not_of('0');
-	int dot = num.find_first_not_of('.');
+	int dot = num.find_first_of('.');
 
-	num.erase(rzero + 1, num.size());
 	if (lzero < dot - 1) {
-		num = clean(num);
+		num = num.substr(lzero);
 	}
+	num.erase(rzero + 1, num.size());
 
+	if (num[num.size()-1] == '.') {
+		num += "0";
+	}
 	return num;
 }
 
 std::string MultiplyNumberString(std::string a, std::string b) {
-
 	std::string buf = "";
 
 	if (a[0] == '-' || b[0] == '-') {
@@ -62,22 +121,22 @@ std::string MultiplyNumberString(std::string a, std::string b) {
 			TempStr.push_back((Temp % 10) + '0');
 			Temp = Temp / 10;
 		}
-		if (Temp != 0) { //Nếu vẫn còn Temp.
+		if (Temp != 0) { // Nếu vẫn còn Temp.
 			TempStr.push_back(Temp + '0');
 			Temp = 0;
 		}
 
-		//Đảo chuỗi.
+		// Đảo chuỗi.
 		reverse(TempStr.begin(), TempStr.end());
 
-		//Thêm các số 0 cần thiết vào sau.
+		// Thêm các số 0 cần thiết vào sau.
 		for (int j = 0; j < i; j++) {
 			TempStr.push_back('0');
 		}
 
-		//Cộng Result và Temp.
+		// Cộng Result và Temp.
 		Result = AddNumberString(Result, TempStr);
-		TempStr.clear(); //Dọn chuỗi tạm để dùng cho các bước tiếp theo.
+		TempStr.clear(); // Dọn chuỗi tạm để dùng cho các bước tiếp theo.
 	}
 
 	if (own >= Result.size()) {
@@ -88,23 +147,10 @@ std::string MultiplyNumberString(std::string a, std::string b) {
 		Result.insert(Result.size() - own, ".");
 	}
 
-	// while (Result[Result.size()-1] == '0' && own > 0) {
-	// 	--own;
-	// 	Result.pop_back();
-	// }
-
-	// if (own > 0) {
-	// 	buf += "0.";
-	// 	while (--own > 0) {
-	// 		buf += "0";
-	// 	}
-	// 	return buf + Result;
-	// }
-
 	return buf + Result;
 }
 
-std::string toDec(std::string bin) {
+std::string FloatBinToDec(std::string bin) {
 	while (bin.size() < 128) {
 		bin += "0";
 	}
@@ -133,6 +179,7 @@ std::string toDec(std::string bin) {
 	else {
 		val.insert(0, "1");
 	}
+
 	std::string res = cleanFloat(sign + MultiplyNumberString(BinToDec(val), pow_2_n(expo)));
 	if (res[res.size()-1] == '.') {
 		res += "0";
@@ -140,7 +187,7 @@ std::string toDec(std::string bin) {
 	return res;
 }
 
-std::string toBin(std::string dec) {
+std::string FloatDecToBin(std::string dec) {
 	if (dec == "0") {
 		return fill("0", 128);
 	}
@@ -207,5 +254,5 @@ std::string toBin(std::string dec) {
 	while (val.size() < 112) {
 		val += "0";
 	}
-	return sign + expo.substr(expo.size() -15, expo.size()) +"."+ val.substr(0, 112);
+	return sign + expo.substr(expo.size() -15, expo.size()) + val.substr(0, 112);
 }
