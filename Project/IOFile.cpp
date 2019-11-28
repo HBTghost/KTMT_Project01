@@ -560,9 +560,9 @@ void IOFile::executeCommandLineModeQFloat(int i)
 	std::vector<std::string> tokens = this->tokenizeCommandLine(i);
 
 	if (tokens[0] == "2") {
-		this->results[i] = FloatBinToDec(tokens[1]);
+		this->results[i] = toDec(tokens[1]);
 	}
 	else if (tokens[0] == "10") {
-		this->results[i] = FloatDecToBin(tokens[1]);
+		this->results[i] = toBin(tokens[1]);
 	}
 }
