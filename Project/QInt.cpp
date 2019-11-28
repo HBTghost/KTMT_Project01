@@ -541,19 +541,23 @@ bool small(std::string a, std::string b) {
 	return !a1;
 }
 
-	std::string divi(std::string a, std::string b) {
+std::string divi(std::string a, std::string b) {
 	a = fill(a, 128);
 	b = fill(b, 128);
 
 	std::string zero = fill("", 128);
 	bool both = a[0] == b[0];
+
 	if (a[0] > '0') {
-		a.erase(a.begin());
+		a = com2(a);
 	}
 	if (b[0] > '0') {
-		b.erase(b.begin());
+		b = com2(b);
 	}
-	
+
+	if (small(a, b))
+		return zero;
+
 	int lenA = a.size() - a.find_first_of('1'); // 4
 	int lenB = b.size() - b.find_first_of('1'); // 2
 	a = a.erase(0, a.find_first_of('1')); // 1111
@@ -612,7 +616,10 @@ std::string strRol(std::string obj, int num) {
 }
 
 std::string clean(std::string obj) {
-	return obj.substr(obj.find_first_not_of('0'));
+	if (obj.find_first_of('1') != std::string::npos) {
+		return obj.substr(obj.find_first_not_of('0'));
+	}
+	return "0";
 }
 
 std::vector<std::string> binCase{ "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111", "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111" };

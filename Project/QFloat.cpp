@@ -159,25 +159,25 @@ int CharToIntNum(char n)
 	int tmp = int(n);
 	switch (tmp)
 	{
-	case 48:
+		case 48:
 		return 0;
-	case 49:
+		case 49:
 		return 1;
-	case 50:
+		case 50:
 		return 2;
-	case 51:
+		case 51:
 		return 3;
-	case 52:
+		case 52:
 		return 4;
-	case 53:
+		case 53:
 		return 5;
-	case 54:
+		case 54:
 		return 6;
-	case 55:
+		case 55:
 		return 7;
-	case 56:
+		case 56:
 		return 8;
-	case 57:
+		case 57:
 		return 9;
 	}
 }
@@ -185,25 +185,25 @@ char IntToCharNum(int n)
 {
 	switch (n)
 	{
-	case 0:
+		case 0:
 		return 48;
-	case 1:
+		case 1:
 		return 49;
-	case 2:
+		case 2:
 		return 50;
-	case 3:
+		case 3:
 		return 51;
-	case 4:
+		case 4:
 		return 52;
-	case 5:
+		case 5:
 		return 53;
-	case 6:
+		case 6:
 		return 54;
-	case 7:
+		case 7:
 		return 55;
-	case 8:
+		case 8:
 		return 56;
-	case 9:
+		case 9:
 		return 57;
 	}
 }
@@ -767,5 +767,79 @@ std::string toDec(std::string bin) {
 	else {
 		val.insert(0, "1");
 	}
-	return sign + MultiplyNumberString(BinToDec(val), pow_2_n(expo));
+	std::string res = cleanFloat(sign + MultiplyNumberString(BinToDec(val), pow_2_n(expo)));
+	if (res[res.size()-1] == '.') {
+		res += "0";
+	}
+	return res;
+}
+
+std::string toBin(std::string dec) {
+	if (dec == "0") {
+		return fill("0", 128);
+	}
+	else if (dec == "infinity") {
+		return "0111111111111111" + fill("0", 112);
+	}
+	else if (dec == "NaN") {
+		return "01111111111111111" + fill("0", 111);
+	}
+
+	std::string sign;
+	if (dec[0] == '-') {
+		sign = "1";
+		dec.erase(dec.begin());
+	}
+	else {
+		sign = "0";
+	}
+
+	std::string lg, sm;
+	if (dec.find_first_of('.') == std::string::npos) {
+		lg = dec;
+		sm = "1.0";
+	}
+	else {
+		lg = dec.substr(0, dec.find_first_of('.'));
+		sm = "0" + dec.substr(dec.find_first_of('.'));
+	}
+	std::string val = clean(DecToBin(lg));
+
+	int ex = val.size()-1;
+	int max = std::stoi(pow_2_n(14)) + 110;
+
+	for (std::size_t i = 0; i < max && sm != "1.0"; ++i) {
+		sm[0] = '0';
+		sm = MultiplyNumberString(sm, "2");
+		val.push_back(sm[0]);
+	}
+
+	if (lg == "0") {
+		int one = val.find_first_of('1');
+		if (one != std::string::npos) {
+			ex -= one;
+			if (abs(ex) <= max - 112) {
+				val = val.substr(one);
+			}
+			else if (abs(ex) <= max ) {
+				val = val.substr(max-112);
+				ex = 111-max;
+			}
+		}
+		else {
+			return fill("0", 128);
+		}
+	}
+
+	ex += std::stoi(pow_2_n(14))-1;
+	if (ex >= std::stoi(pow_2_n(15))-1) {
+		return "infinity";
+	}
+	std::string expo = DecToBin(std::to_string(ex));
+
+	val.erase(val.begin());
+	while (val.size() < 112) {
+		val += "0";
+	}
+	return sign + expo.substr(expo.size() -15, expo.size()) +"."+ val.substr(0, 112);
 }

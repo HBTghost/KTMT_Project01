@@ -72,3 +72,4 @@ std::string Sign(std::string bin);
 std::string toBinString(std::string sign, std::string index, std::string significand);
 
 std::string toDec(std::string bin);
+std::string toBin(std::string dec);
