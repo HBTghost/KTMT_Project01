@@ -1,34 +1,28 @@
 #include "IOFile.h"
+#include "Console.h"
 
 
 int main(int argc, char const* argv[])
 {
+	if (argc == 1) {
+		Console cS;
+		cS.run();
+	}
+	else if (argc == 3){
+		bool modeQInt = true;
+		if (argv[3] == "1") {
+			modeQInt = true;
+		}
+		else if (argv[3] == "2") {
+			modeQInt = false;
+		}
 
+		IOFile f(argv[1], modeQInt);
 
-	
-
-	// cout << FloatBinToDec(d);
-
-
-
-	// std::string testDec("-1234.125");
-	// Qfloat fb(testDec);
-
-	//for (int i = -32; i < 33; ++i) {
-		//std::cout << "2^" << i << " = " << pow_2_n(i) << "\n";
-	//}
-
-	// std::cout << toDec(HexToBin("Dffd5555555555555555555555555555")) << "\n";
-
-	// std::cout << toDec("0100000000001101001011101110010100000000000000000000000000000000000000000000000000000001")<< "\n";
-	// std::cout << FloatDecToBin("123945813528981235.0000000000000000000000000000007888609052210118054117285652827862296732064351090230047702789306640625");
-	// std::cout << FloatBinToDec("01000000001101111011100001011000000011111000101011001010101011101111001100000000000000000000000000000000000000000000000000000000");
-
-	// std::cout << divi("11111111111111111111111111111111111111111111111111011010110010100100100110000011001000011111010111100101101010000001001101111011", "11000101101000010100110100100011010011001001");
-
-	IOFile f("input.txt", true);
-
-	f.writeResults("output.txt");
-
+		f.writeResults(argv[2]);
+	}
+	else {
+		cout << "ERROR: main(): invalid input" << endl;
+	}
 	return 0;
 }
