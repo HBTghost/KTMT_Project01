@@ -6,15 +6,19 @@ IOFile::IOFile(std::string fname, bool modeQInt) {
 	this->results = new string[this->commandLine.size()];
 
 	this->modeQInt = modeQInt;
+
 }
 
-IOFile::~IOFile() {
+IOFile::~IOFile()
+{
 	if (this->results != nullptr) {
 		delete[] this->results;
 	}
 }
 
-bool IOFile::readCommandLine(std::string fname) {
+bool IOFile::readCommandLine(std::string fname)
+{
+
 	ifstream f(fname);
 
 	if (!f.is_open()) {
@@ -22,11 +26,13 @@ bool IOFile::readCommandLine(std::string fname) {
 		return false;;
 	}
 
+	
+
 	string temp;
 
 	getline(f, temp, '\n');
 
-	// Read all lines in input file
+	//read all lines in input file
 	while (temp != "") {
 		this->commandLine.push_back(temp);
 		temp.clear();
@@ -58,7 +64,8 @@ bool IOFile::writeResults(std::string fname) {
 	return true;
 }
 
-std::vector<std::string> IOFile::tokenizeCommandLine(int i) {
+std::vector<std::string> IOFile::tokenizeCommandLine(int i)
+{
 	std::vector<std::string> result;
 
 	if (i >= commandLine.size()) {
@@ -77,13 +84,15 @@ std::vector<std::string> IOFile::tokenizeCommandLine(int i) {
 	return result;
 }
 
-void IOFile::executeAllCommandLine() {
+void IOFile::executeAllCommandLine()
+{
 	for (int i = 0; i < this->commandLine.size(); i++) {
 		executeCommandLine(i);
 	}
 }
 
-void IOFile::executeCommandLine(int i) {
+void IOFile::executeCommandLine(int i)
+{
 	if (i >= commandLine.size()) {
 		std::cout << "\nERROR: executeCommandLine: i is out of range.\n";
 		return;
@@ -98,7 +107,8 @@ void IOFile::executeCommandLine(int i) {
 
 }
 
-void IOFile::executeCommandLineModeQInt(int i) {
+void IOFile::executeCommandLineModeQInt(int i)
+{
 	std::vector<std::string> tokens = this->tokenizeCommandLine(i);
 	
 	//----BINARY--------------
@@ -545,7 +555,8 @@ void IOFile::executeCommandLineModeQInt(int i) {
 	}
 }
 
-void IOFile::executeCommandLineModeQFloat(int i) {
+void IOFile::executeCommandLineModeQFloat(int i)
+{
 	std::vector<std::string> tokens = this->tokenizeCommandLine(i);
 
 	if (tokens[0] == "2") {

@@ -10,10 +10,10 @@ int main(int argc, char const* argv[])
     }
     else if (argc == 4){
         bool modeQInt = true;
-        if (argv[4] == "1") {
+        if (argv[3] == "1") {
             modeQInt = true;
         }
-        else if (argv[4] == "2") {
+        else if (argv[3] == "2") {
             modeQInt = false;
         }
 

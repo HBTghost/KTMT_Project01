@@ -118,7 +118,7 @@ void Console::QIntConverter() {
     system("cls");
 
     std::cout << "-------------QINT CONVERTER--------------\n" << std::endl;
-    std::cout << "BASE: ";
+    std::cout << "BASE:\n ";
     std::cout << "  1. Binary\n ";
     std::cout << "  2. Decimal\n ";
     std::cout << "  3. Hexadecimal\n";
@@ -186,7 +186,7 @@ void Console::QIntArithmetic() {
     system("cls");
 
     std::cout << "-------------QINT ARITHMETIC OPERATIONS--------------\n" << std::endl;
-    std::cout << "BASE: ";
+    std::cout << "BASE:\n ";
     std::cout << "  1. Binary\n ";
     std::cout << "  2. Decimal\n ";
     std::cout << "  3. Hexadecimal\n";
@@ -263,7 +263,6 @@ void Console::QIntArithmetic() {
         tokens.push_back(num2);
     }
 
-    std::cout << tokens[0] << tokens[1] << tokens[2] << tokens[3] << std::endl;
     std::cout << "RESULT: " << executeCommandLine(tokens) << std::endl;
 
     system("pause");

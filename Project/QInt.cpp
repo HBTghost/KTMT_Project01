@@ -47,6 +47,7 @@ QInt operator|(QInt a, QInt b) {
 	for (int i = 0; i < _DEFAULT_SIZE / 4; i++) {
 		result.arr[i] = a.arr[i] | b.arr[i];
 	}
+
 	return result;
 }
 QInt operator&(QInt a, QInt b) {
@@ -55,6 +56,7 @@ QInt operator&(QInt a, QInt b) {
 	for (int i = 0; i < _DEFAULT_SIZE / 4; i++) {
 		result.arr[i] = a.arr[i] & b.arr[i];
 	}
+
 	return result;
 }
 QInt operator^(QInt a, QInt b) {
@@ -63,6 +65,7 @@ QInt operator^(QInt a, QInt b) {
 	for (int i = 0; i < _DEFAULT_SIZE / 4; i++) {
 		result.arr[i] = a.arr[i] ^ b.arr[i];
 	}
+
 	return result;
 }
 
@@ -72,6 +75,7 @@ QInt QInt::operator~() {
 	for (int i = 0; i < _DEFAULT_SIZE / 4; i++) {
 		result.arr[i] = ~this->arr[i];
 	}
+
 	return result;
 }
 
@@ -155,12 +159,14 @@ std::string QInt::toBinString() {
 			}
 		}
 	}
+
 	return result;
 }
 
 // ============ //
 
-void ScanQInt(QInt& x) {
+void ScanQInt(QInt& x)
+{
 	int type;
 	std::cout << std::endl << "Enter type of input data (2 for bin string, 10 for decimal): ";
 	std::cin >> type;
@@ -197,7 +203,7 @@ std::string SubNumberString(std::string a, std::string b) {
 	int re = 0;
 	bool neg = false;
 
-	// Thêm các số 0 vào đầu mỗi chuỗi.
+	//Thêm các số 0 vào đầu mỗi chuỗi.
 	if (a.size() > b.size()) {
 		while (a.size() != b.size()) {
 			b.insert(b.begin(), '0');
@@ -209,13 +215,13 @@ std::string SubNumberString(std::string a, std::string b) {
 		}
 	}
 
-	// Kiểm tra a hay b lớn hơn và chuyển a thành số lớn hơn.
+	//Kiểm tra a hay b lớn hơn và chuyển a thành số lớn hơn.
 	if (strcmp(a.c_str(), b.c_str()) < 0) {
 		std::swap(a, b);
-		neg = true; // a < b => a - b < 0
+		neg = true; //a < b => a - b < 0
 	}
 
-	// Thực hiện phép trừ.
+	//Thực hiện phép trừ.
 	for (std::size_t i = a.size() - 1; i > -1; i--) {
 		if ((a[i] - re) < b[i]) {
 			a[i] = (10 + a[i] - b[i] - re) + '0';
@@ -229,7 +235,7 @@ std::string SubNumberString(std::string a, std::string b) {
 
 	a.erase(0, a.find_first_not_of("0"));
 
-	// Nếu vẫn còn dư (re != 0)
+	//Nếu vẫn còn dư (re != 0)
 	if (neg == true) {
 		a.insert(a.begin(), '-');
 	}
@@ -247,7 +253,8 @@ std::string AddNumberString(std::string a, std::string b) {
 			b.erase(b.begin());
 			a = SubNumberString(a, b);
 		}
-		else {
+		else
+		{
 			int Temp = 0;
 			bool Negative = false;
 
@@ -255,7 +262,7 @@ std::string AddNumberString(std::string a, std::string b) {
 				Negative = true;
 			}
 
-			// Thêm các số 0 vào đầu mỗi chuỗi.
+			//Thêm các số 0 vào đầu mỗi chuỗi.
 			if (a.size() > b.size()) {
 				while (a.size() != b.size()) {
 					b.insert(b.begin(), '0');
@@ -267,14 +274,14 @@ std::string AddNumberString(std::string a, std::string b) {
 				}
 			}
 
-			//  Tiến hành cộng.
+			// Tiến hành cộng.
 			for (int i = a.size() - 1; i > -1; i--) {
 				Temp = Temp + a[i] + b[i] - 2 * '0';
 				a[i] = (Temp % 10) + '0';
 				Temp = Temp / 10;
 			}
 
-			//N ếu vẫn còn dư (Temp != 0)
+			//Nếu vẫn còn dư (Temp != 0)
 			if (Temp != 0) {
 				a.insert(a.begin(), Temp + '0');
 				Temp = 0;
@@ -282,7 +289,14 @@ std::string AddNumberString(std::string a, std::string b) {
 		}
 	}
 
-	return clean(a);
+	//Xóa các số 0 thừa.
+	// while (a[0] == '0')
+	// {
+	//     a.erase(a.begin());
+	// }
+	a.erase(0, a.find_first_not_of("0"));
+
+	return a;
 }
 
 std::string DivBy2(std::string src) {
@@ -302,6 +316,7 @@ std::string DivBy2(std::string src) {
 		temp %= 2;
 	}
 
+
 	return res;
 }
 
@@ -319,10 +334,10 @@ std::string DecToBin(std::string dec) {
 		dec = DivBy2(dec);
 	}
 
-	// ffil 128 bits
+	//fil 128 bits
 	fillBinWithZero(res, _DEFAULT_SIZE * 8);
 
-	// chuyển về số bù 2 nếu âm
+	//chuyển về số bù 2 nếu âm
 	if (neg == true) {
 		res = com2(res);
 	}
@@ -352,11 +367,12 @@ std::string BinToDec(std::string bin) {
 	// tính giá trị
 	for (int i = 1; i < bin.length(); i++) {
 		if (bin[i] == '1') {
+			// result = AddNumberString(result, t.p[bin.length() - i - 1]);
 			result = AddNumberString(result, pow_2_n(bin.length() - i - 1));
 		}
 	}
 
-	// thêm dấu nếu âm
+	//thêm dấu nếu âm
 	if (negative) {
 		result.insert(0, "-");
 	}
@@ -421,7 +437,8 @@ std::string multi(std::string a, std::string b) {
 		b = com2(b);
 	}
 
-	b = clean(b); // 1111
+	// a = a.erase(0, a.find_first_of('1')); // 1111
+	b = b.erase(0, b.find_first_of('1')); // 1111
 
 	std::string res{ "0" };
 	std::string tem;
@@ -561,7 +578,7 @@ std::string strRol(std::string obj, int num) {
 }
 
 std::string clean(std::string obj) {
-	if (obj.find_first_of('1') != std::string::npos) {
+	if (obj.find_first_not_of('0') != std::string::npos) {
 		return obj.substr(obj.find_first_not_of('0'));
 	}
 	return "0";
