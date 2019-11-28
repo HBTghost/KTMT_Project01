@@ -555,14 +555,13 @@ void IOFile::executeCommandLineModeQInt(int i)
 	}
 }
 
-void IOFile::executeCommandLineModeQFloat(int i)
-{
+void IOFile::executeCommandLineModeQFloat(int i) {
 	std::vector<std::string> tokens = this->tokenizeCommandLine(i);
 
 	if (tokens[0] == "2") {
-		this->results[i] = FloatBinToDec(tokens[1]);
+		this->results[i] = FloatBinToDec(tokens[2]);
 	}
 	else if (tokens[0] == "10") {
-		this->results[i] = FloatDecToBin(tokens[1]);
+		this->results[i] = FloatDecToBin(tokens[2]);
 	}
 }
