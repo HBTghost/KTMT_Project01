@@ -19,38 +19,10 @@ std::string FloatDecToBin(std::string bin);
 
 
 ///////////////////////////////////////////////////
-std::string calBeforeComma(std::string bin_tmp);
+
 
 bool SpecialCaseDecToBin(std::string bin);
 
-std::string calAfterComma(std::string bin_tmp);
-
-int FindBitZero(std::string bin);
-
-int FindIndexNum(std::string bin, int& res);
-
-int CharToIntNum(char n);
-
-char IntToCharNum(int n);
-
-std::string AddNumberFloatString(std::string a, std::string b);
-
-std::string addFloatingPoint(std::string bin, int IndexNum);
-
-std::string addOneInStart(std::string bin_tmp, int BitZero);
-
-std::string BeforeComma(std::string bin_tmp);
-
-std::string AfterComma(std::string bin_tmp);
-
-std::string AfterCommaDec(std::string bin_tmp);
-
-std::string toDecString(std::string bin, std::string afterComma, std::string BeforeComma);
-
-bool SpecialCase(std::string bin, int IndexNum, int res);
-
-bool Zero(std::string bin);
-////////////////////////////////////////////////////
 std::string CutBefore(std::string bin);
 
 std::string CutAfter(std::string bin);

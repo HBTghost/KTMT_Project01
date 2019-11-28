@@ -12,7 +12,7 @@ IOFile::IOFile(std::string fname, bool modeQInt) {
 IOFile::~IOFile()
 {
 	if (this->results != nullptr) {
-		delete this->results;
+		delete[] this->results;
 	}
 }
 
@@ -34,6 +34,7 @@ bool IOFile::readCommandLine(std::string fname)
 
 	//read all lines in input file
 	while (temp != "") {
+		this->commandLine.push_back(temp);
 		temp.clear();
 		getline(f, temp, '\n');
 	}
@@ -54,13 +55,10 @@ bool IOFile::writeResults(std::string fname) {
 
 	executeAllCommandLine();
 
+	
 	for (int i = 0; i < this->commandLine.size(); i++) {
-		f << this->commandLine[i] << "        ----------------> Result: " << this->results[i] << std::endl;
+		f << this->results[i] << std::endl;
 	}
-
-	/*for (int i = 0; i < this->result.size(); i++) {
-		f << this->result[i] << std::endl;
-	}*/
 	
 	f.close();
 	return true;
@@ -104,7 +102,7 @@ void IOFile::executeCommandLine(int i)
 		executeCommandLineModeQInt(i);
 	}
 	else {
-		//executeCommandLineModeQFloat(i);
+		executeCommandLineModeQFloat(i);
 	}
 
 }
@@ -554,5 +552,17 @@ void IOFile::executeCommandLineModeQInt(int i)
 			this->results[i] = BinToHex(res.toBinString());
 			return;
 		}
+	}
+}
+
+void IOFile::executeCommandLineModeQFloat(int i)
+{
+	std::vector<std::string> tokens = this->tokenizeCommandLine(i);
+
+	if (tokens[0] == "2") {
+		this->results[i] = FloatBinToDec(tokens[1]);
+	}
+	else if (tokens[0] == "10") {
+		this->results[i] = FloatDecToBin(tokens[1]);
 	}
 }
